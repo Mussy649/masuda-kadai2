@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
 
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
+Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/home', function () {

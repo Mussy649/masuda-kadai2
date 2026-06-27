@@ -42,13 +42,14 @@
 
         <div>
             @foreach ($items as $item)
-                <div style="display: inline-block; width: 200px; margin: 16px; vertical-align: top;">
-                    <div style="width: 200px; height: 200px; background: #eeeeee; display: flex; align-items: center; justify-content: center;">
-                        {{ $item->name }}
-                    </div>
+    <a href="{{ route('items.show', ['item_id' => $item->id]) }}" style="text-decoration: none; color: inherit;">
+        <div style="width: 200px; height: 200px; background: #eeeeee; display: flex; align-items: center; justify-content: center;">
+            {{ $item->name }}
+        </div>
 
-                    <p>{{ $item->name }}</p>
-                    <p>¥{{ number_format($item->price) }}</p>
+        <p>{{ $item->name }}</p>
+        <p>¥{{ number_format($item->price) }}</p>
+    </a>
                 </div>
             @endforeach
         </div>

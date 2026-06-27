@@ -37,4 +37,13 @@ class ItemController extends Controller
 
         return view('items.index', compact('items'));
     }
+
+    public function show($item_id)
+    {
+        $item = Item::with(['condition', 'categories', 'user'])
+            ->withCount(['likes', 'comments'])
+            ->findOrFail($item_id);
+
+        return view('items.show', compact('item'));
+    }
 }
