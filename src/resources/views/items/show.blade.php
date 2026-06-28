@@ -45,10 +45,26 @@
 
                 <p>¥{{ number_format($item->price) }}</p>
 
-                <div>
+            <div>
+                @auth
+                    @if ($isLiked)
+                        <form action="{{ route('likes.destroy', ['item_id' => $item->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">♥ {{ $item->likes_count }}</button>
+                        </form>
+                    @else
+                        <form action="{{ route('likes.store', ['item_id' => $item->id]) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit">♡ {{ $item->likes_count }}</button>
+                        </form>
+                    @endif
+                @else
                     <span>♡ {{ $item->likes_count }}</span>
-                    <span>💬 {{ $item->comments_count }}</span>
-                </div>
+                @endauth
+
+                <span>💬 {{ $item->comments_count }}</span>
+            </div>   
 
                 <button type="button">購入手続きへ</button>
 

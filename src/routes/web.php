@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\LikeController;
 
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show');
@@ -14,4 +15,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/item/{item_id}/like', [LikeController::class, 'store'])->name('likes.store');
+    Route::delete('/item/{item_id}/like', [LikeController::class, 'destroy'])->name('likes.destroy');
 });
