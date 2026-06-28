@@ -30,33 +30,33 @@
         </nav>
     </header>
 
-    <main>
-        <div style="display: flex; gap: 40px; margin: 40px;">
-            <div style="width: 400px; height: 400px; background: #eeeeee; display: flex; align-items: center; justify-content: center;">
-                {{ $item->name }}
-            </div>
+<main>
+    <div class="item-detail">
+        <div class="item-detail__image">
+            {{ $item->name }}
+        </div>
 
-            <div>
-                <h1>{{ $item->name }}</h1>
+        <div class="item-detail__content">
+            <h1 class="item-detail__name">{{ $item->name }}</h1>
 
-                @if ($item->brand_name)
-                    <p>ブランド：{{ $item->brand_name }}</p>
-                @endif
+            @if ($item->brand_name)
+                <p>ブランド：{{ $item->brand_name }}</p>
+            @endif
 
-                <p>¥{{ number_format($item->price) }}</p>
+            <p class="item-detail__price">¥{{ number_format($item->price) }}</p>
 
-            <div>
+            <div class="item-detail__icons">
                 @auth
                     @if ($isLiked)
-                        <form action="{{ route('likes.destroy', ['item_id' => $item->id]) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('likes.destroy', ['item_id' => $item->id]) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit">♥ {{ $item->likes_count }}</button>
+                            <button type="submit" class="like-button">♥ {{ $item->likes_count }}</button>
                         </form>
                     @else
-                        <form action="{{ route('likes.store', ['item_id' => $item->id]) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('likes.store', ['item_id' => $item->id]) }}" method="POST">
                             @csrf
-                            <button type="submit">♡ {{ $item->likes_count }}</button>
+                            <button type="submit" class="like-button">♡ {{ $item->likes_count }}</button>
                         </form>
                     @endif
                 @else
@@ -64,29 +64,123 @@
                 @endauth
 
                 <span>💬 {{ $item->comments_count }}</span>
-            </div>   
-
-                <button type="button">購入手続きへ</button>
-
-                <h2>商品説明</h2>
-                <p>{{ $item->description }}</p>
-
-                <h2>商品の情報</h2>
-
-                <p>
-                    カテゴリー：
-                    @foreach ($item->categories as $category)
-                        <span>{{ $category->name }}</span>
-                    @endforeach
-                </p>
-
-                <p>商品の状態：{{ $item->condition->name }}</p>
-
-                <h2>コメント</h2>
-
-                <p>コメント機能は後続タスクで実装予定</p>
             </div>
+
+            <button type="button" class="purchase-button">購入手続きへ</button>
+
+            <h2>商品説明</h2>
+            <p>{{ $item->description }}</p>
+
+            <h2>商品の情報</h2>
+
+            <p>
+                カテゴリー：
+                @foreach ($item->categories as $category)
+                    <span class="category-label">{{ $category->name }}</span>
+                @endforeach
+            </p>
+
+            <p>商品の状態：{{ $item->condition->name }}</p>
+
+            <h2>コメント</h2>
+
+            <p>コメント機能は後続タスクで実装予定</p>
         </div>
-    </main>
+    </div>
+</main>
 </body>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    header {
+        padding: 12px 24px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    header a {
+        margin-right: 16px;
+    }
+
+    .item-detail {
+        display: flex;
+        gap: 56px;
+        max-width: 1100px;
+        margin: 60px auto;
+        padding: 0 24px;
+    }
+
+    .item-detail__image {
+        width: 420px;
+        height: 420px;
+        background: #eeeeee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .item-detail__content {
+        flex: 1;
+    }
+
+    .item-detail__name {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+
+    .item-detail__price {
+        font-size: 24px;
+        margin: 16px 0;
+    }
+
+    .item-detail__icons {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin: 16px 0;
+    }
+
+    .like-button {
+        border: none;
+        background: transparent;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0;
+    }
+
+    .purchase-button {
+        display: inline-block;
+        margin: 16px 0;
+        padding: 10px 40px;
+        background: #ff5555;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    .category-label {
+        display: inline-block;
+        margin-right: 8px;
+        padding: 4px 12px;
+        background: #eeeeee;
+        border-radius: 12px;
+    }
+
+    @media screen and (max-width: 768px) {
+        .item-detail {
+            flex-direction: column;
+            margin: 32px auto;
+        }
+
+        .item-detail__image {
+            width: 100%;
+            max-width: 420px;
+            height: 320px;
+        }
+    }
+</style>
 </html>
