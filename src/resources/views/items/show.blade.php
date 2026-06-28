@@ -66,8 +66,7 @@
                 <span>💬 {{ $item->comments_count }}</span>
             </div>
 
-            <button type="button" class="purchase-button">購入手続きへ</button>
-
+            <a href="{{ route('purchase.show', ['item_id' => $item->id]) }}" class="purchase-button">購入手続きへ</a>
             <h2>商品説明</h2>
             <p>{{ $item->description }}</p>
 
@@ -82,9 +81,34 @@
 
             <p>商品の状態：{{ $item->condition->name }}</p>
 
-            <h2>コメント</h2>
+        <h2>コメント</h2>
 
-            <p>コメント機能は後続タスクで実装予定</p>
+        <div>
+            @foreach ($item->comments as $comment)
+                <div style="margin-bottom: 16px; padding: 8px; background: #f5f5f5;">
+                    <p>{{ $comment->user->name }}</p>
+                    <p>{{ $comment->comment }}</p>
+                </div>
+            @endforeach
+        </div>
+
+        @auth
+            <form action="{{ route('comments.store', ['item_id' => $item->id]) }}" method="POST">
+                @csrf
+
+                <div>
+                    <textarea name="comment" rows="4" cols="50" placeholder="商品へのコメントを入力してください">{{ old('comment') }}</textarea>
+                </div>
+
+                @error('comment')
+                    <p style="color: red;">{{ $message }}</p>
+                @enderror
+
+                <button type="submit">コメントを送信する</button>
+            </form>
+        @else
+            <p>コメントを送信するにはログインが必要です。</p>
+        @endauth
         </div>
     </div>
 </main>
@@ -160,6 +184,7 @@
         color: #fff;
         border: none;
         cursor: pointer;
+        text-decoration: none;
     }
 
     .category-label {
