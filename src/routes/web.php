@@ -21,4 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/item/{item_id}/like', [LikeController::class, 'destroy'])->name('likes.destroy');
     Route::post('/item/{item_id}/comment', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/purchase/{item_id}', [PurchaseController::class, 'show'])->name('purchase.show');
+    Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])->name('purchase.store');
+    Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address.edit');
+    Route::patch('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress'])->name('purchase.address.update');
 });
