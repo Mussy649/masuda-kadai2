@@ -43,9 +43,15 @@
         <div>
             @foreach ($items as $item)
     <a href="{{ route('items.show', ['item_id' => $item->id]) }}" style="text-decoration: none; color: inherit;">
-        <div style="width: 200px; height: 200px; background: #eeeeee; display: flex; align-items: center; justify-content: center;">
-            {{ $item->name }}
-        </div>
+        <div style="width: 200px; height: 200px; background: #eeeeee; display: flex; align-items: center; justify-content: center; position: relative;">
+        {{ $item->name }}
+
+        @if ($item->purchase)
+            <span style="position: absolute; top: 8px; left: 8px; background: #ff5555; color: #fff; padding: 4px 8px; font-weight: bold;">
+                Sold
+            </span>
+        @endif
+        </div> 
 
         <p>{{ $item->name }}</p>
         <p>¥{{ number_format($item->price) }}</p>

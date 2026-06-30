@@ -2,11 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $page = $request->query('page', 'sell');
+
+        if ($page === 'buy') {
+            $purchasedItemIds = DB::table('purchases')
+                ->where('user_id', $user->id)
+                ->pluck('item_id');
+
+            $items = Item::whereIn('id', $purchasedItemIds)->latest()->get();
+        } else {
+            $items = Item::where('user_id', $user->id)->latest()->get();
+        }
+
+        return view('mypage.index', compact('user', 'items', 'page'));
+    }
+
     public function edit()
     {
         return view('mypage.edit', [

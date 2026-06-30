@@ -29,6 +29,9 @@ class ItemController extends Controller
             $query = Item::query();
         }
 
+        $query->with('purchase');
+
+
         if ($request->filled('keyword')) {
             $query->where('name', 'like', '%' . $request->keyword . '%');
         }

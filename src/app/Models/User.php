@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Purchase::class);
     }
+
+    public function hasCompletedProfile()
+    {
+    return !empty($this->postal_code) && !empty($this->address);
+    }
 }
