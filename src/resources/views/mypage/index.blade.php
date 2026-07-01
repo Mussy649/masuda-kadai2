@@ -14,7 +14,7 @@
 
         <div>
             <p>{{ $user->name }}</p>
-            <a href="{{ route('profile.edit') }}">プロフィールを編集</a>
+            <a href="{{ route('mypage.profile.edit') }}">プロフィールを編集</a>
         </div>
 
         <hr>

@@ -53,14 +53,24 @@
             margin-top: 4px;
         }
 
-        .address__button {
+                .address__button {
             width: 100%;
             margin-top: 32px;
             padding: 12px;
             background: #ff5555;
             color: #fff;
             border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="{{ route('items.index') }}" class="header__logo">COACHTECH</a>
+    </header>
 
+    <main class="address">
     <main class="address">
         <h1 class="address__title">住所の変更</h1>
 
