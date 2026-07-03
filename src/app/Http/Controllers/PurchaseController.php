@@ -20,7 +20,9 @@ class PurchaseController extends Controller
     public function store(Request $request, $item_id)
     {
         $request->validate([
-            'payment_method' => ['required'],
+        'payment_method' => ['required'],
+        ], [
+        'payment_method.required' => '支払い方法を選択してください。',
         ]);
 
         $item = Item::findOrFail($item_id);
