@@ -9,7 +9,12 @@
         <a href="{{ route('items.index') }}">COACHTECH</a>
 
         <form action="{{ route('items.index') }}" method="GET">
-            <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="なにをお探しですか？">
+            <input
+                type="text"
+                name="keyword"
+                value="{{ request('keyword') }}"
+                placeholder="なにをお探しですか？"
+            >
             <button type="submit">検索</button>
         </form>
 
@@ -33,6 +38,10 @@
     <main>
         <h1>商品一覧</h1>
 
+        @if (session('message'))
+            <p>{{ session('message') }}</p>
+        @endif
+
         <div>
             <a href="{{ route('items.index') }}">おすすめ</a>
             <a href="{{ route('items.index', ['tab' => 'mylist']) }}">マイリスト</a>
@@ -41,23 +50,26 @@
         <hr>
 
         <div>
-            @foreach ($items as $item)
-    <a href="{{ route('items.show', ['item_id' => $item->id]) }}" style="text-decoration: none; color: inherit;">
-        <div style="width: 200px; height: 200px; background: #eeeeee; display: flex; align-items: center; justify-content: center; position: relative;">
-        {{ $item->name }}
+            @forelse ($items as $item)
+                <a href="{{ route('items.show', ['item_id' => $item->id]) }}" style="text-decoration: none; color: inherit;">
+                    <div style="margin-bottom: 24px;">
+                        <div style="width: 200px; height: 200px; background: #eeeeee; display: flex; align-items: center; justify-content: center; position: relative;">
+                            {{ $item->name }}
 
-        @if ($item->purchase)
-            <span style="position: absolute; top: 8px; left: 8px; background: #ff5555; color: #fff; padding: 4px 8px; font-weight: bold;">
-                Sold
-            </span>
-        @endif
-        </div> 
+                            @if ($item->purchase)
+                                <span style="position: absolute; top: 8px; left: 8px; background: #ff5555; color: #ffffff; padding: 4px 8px; font-weight: bold;">
+                                    Sold
+                                </span>
+                            @endif
+                        </div>
 
-        <p>{{ $item->name }}</p>
-        <p>¥{{ number_format($item->price) }}</p>
-    </a>
-                </div>
-            @endforeach
+                        <p>{{ $item->name }}</p>
+                        <p>¥{{ number_format($item->price) }}</p>
+                    </div>
+                </a>
+            @empty
+                <p>表示する商品がありません。</p>
+            @endforelse
         </div>
     </main>
 </body>

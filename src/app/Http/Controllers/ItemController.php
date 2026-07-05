@@ -14,33 +14,35 @@ class ItemController extends Controller
         $tab = $request->query('tab');
 
         if ($tab === 'mylist') {
-            if (!Auth::check()) {
-                $items = collect();
+        if (!Auth::check()) {
+            $items = collect();
 
-                return view('items.index', compact('items'));
-            }
+            return view('items.index', compact('items'));
+        }
 
-            $likedItemIds = DB::table('likes')
-                ->where('user_id', Auth::id())
-                ->pluck('item_id');
+        $likedItemIds = DB::table('likes')
+            ->where('user_id', Auth::id())
+            ->pluck('item_id');
 
-            $query = Item::whereIn('id', $likedItemIds);
+        $query = Item::whereIn('id', $likedItemIds);
         } else {
-            $query = Item::query();
+        $query = Item::query();
+        }
+
+        if (Auth::check()) {
+        $query->where('user_id', '!=', Auth::id());
         }
 
         $query->with('purchase');
 
-
         if ($request->filled('keyword')) {
-            $query->where('name', 'like', '%' . $request->keyword . '%');
+        $query->where('name', 'like', '%' . $request->keyword . '%');
         }
 
         $items = $query->latest()->get();
 
         return view('items.index', compact('items'));
-    }
-
+    } 
     public function show($item_id)
     {
         $item = Item::with(['condition', 'categories', 'user', 'comments.user'])

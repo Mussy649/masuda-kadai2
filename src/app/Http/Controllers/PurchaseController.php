@@ -14,6 +14,11 @@ class PurchaseController extends Controller
     public function show($item_id)
     {
         $item = Item::findOrFail($item_id);
+
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return redirect()->route('items.index');
+        }
+
         $user = Auth::user();
 
         return view('purchases.show', compact('item', 'user'));
@@ -23,50 +28,61 @@ class PurchaseController extends Controller
     {
         $request->validate([
             'payment_method' => ['required'],
-    ], [
-        'payment_method.required' => '支払い方法を選択してください。',
-    ]);
+        ], [
+            'payment_method.required' => '支払い方法を選択してください。',
+        ]);
 
-    $item = Item::findOrFail($item_id);
+        $item = Item::findOrFail($item_id);
 
-    $alreadyPurchased = DB::table('purchases')
-        ->where('item_id', $item_id)
-        ->exists();
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return redirect()->route('items.index');
+        }
 
-    if ($alreadyPurchased) {
-        return redirect()->route('items.show', ['item_id' => $item->id]);
-    }
+        $alreadyPurchased = DB::table('purchases')
+            ->where('item_id', $item_id)
+            ->exists();
 
-    Stripe::setApiKey(config('services.stripe.secret'));
+        if ($alreadyPurchased) {
+            return redirect()->route('items.show', ['item_id' => $item_id]);
+        }
 
-    $checkoutSession = Session::create([
-        'payment_method_types' => ['card'],
-        'line_items' => [[
-            'price_data' => [
-                'currency' => 'jpy',
-                'product_data' => [
-                    'name' => $item->name,
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $checkoutSession = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'jpy',
+                        'product_data' => [
+                            'name' => $item->name,
+                        ],
+                        'unit_amount' => $item->price,
+                    ],
+                    'quantity' => 1,
                 ],
-                'unit_amount' => $item->price,
             ],
-            'quantity' => 1,
-        ]],
-        'mode' => 'payment',
-        'success_url' => route('purchase.success', [
-            'item_id' => $item->id,
-            'payment_method' => $request->payment_method,
-        ], true),
-        'cancel_url' => route('purchase.cancel', [
-            'item_id' => $item->id,
-        ], true),
-    ]);
+            'mode' => 'payment',
+            'success_url' => route('purchase.success', [
+                'item_id' => $item->id,
+                'payment_method' => $request->payment_method,
+            ], true),
+            'cancel_url' => route('purchase.cancel', [
+                'item_id' => $item->id,
+            ], true),
+        ]);
 
-    return redirect($checkoutSession->url);
-}
+        return redirect($checkoutSession->url);
+    }
 
     public function editAddress($item_id)
     {
         $item = Item::findOrFail($item_id);
+
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return redirect()->route('items.index');
+        }
+
         $user = Auth::user();
 
         return view('purchases.address', compact('item', 'user'));
@@ -74,6 +90,12 @@ class PurchaseController extends Controller
 
     public function updateAddress(Request $request, $item_id)
     {
+        $item = Item::findOrFail($item_id);
+
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return redirect()->route('items.index');
+        }
+
         $request->validate([
             'postal_code' => ['required', 'string', 'max:20'],
             'address' => ['required', 'string', 'max:255'],
@@ -88,14 +110,22 @@ class PurchaseController extends Controller
             'building' => $request->building,
         ]);
 
-    return redirect()->route('purchase.show', ['item_id' => $item_id]);
-
+        return redirect()->route('purchase.show', ['item_id' => $item_id]);
     }
 
     public function success(Request $request, $item_id)
     {
         $item = Item::findOrFail($item_id);
         $user = Auth::user();
+
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return redirect()->route('items.index');
+        }
+
+        if (!$request->filled('payment_method')) {
+            return redirect()->route('purchase.show', ['item_id' => $item_id])
+                ->with('message', '支払い方法を選択してください。');
+        }
 
         $alreadyPurchased = DB::table('purchases')
             ->where('item_id', $item_id)
@@ -104,7 +134,7 @@ class PurchaseController extends Controller
         if (!$alreadyPurchased) {
             DB::table('purchases')->insert([
                 'user_id' => $user->id,
-                'item_id' => $item->id,
+                'item_id' => $item_id,
                 'payment_method' => $request->payment_method,
                 'postal_code' => $user->postal_code,
                 'address' => $user->address,
@@ -112,13 +142,19 @@ class PurchaseController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-    }
+        }
 
-    return redirect()->route('items.index');
-}
+        return redirect()->route('items.index');
+    }
 
     public function cancel($item_id)
     {
-    return redirect()->route('purchase.show', ['item_id' => $item_id]);
+        $item = Item::findOrFail($item_id);
+
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return redirect()->route('items.index');
+        }
+
+        return redirect()->route('purchase.show', ['item_id' => $item_id]);
     }
 }
