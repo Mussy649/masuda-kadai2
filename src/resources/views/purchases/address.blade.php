@@ -76,7 +76,7 @@
 
         <form action="{{ route('purchase.address.update', ['item_id' => $item->id]) }}" method="POST">
             @csrf
-            @method('PATCH')
+            @method('PUT')
 
             <div class="address__group">
                 <label class="address__label">郵便番号</label>
