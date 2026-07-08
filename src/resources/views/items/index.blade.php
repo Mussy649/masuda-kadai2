@@ -42,30 +42,29 @@
             <p>{{ session('message') }}</p>
         @endif
 
-        <div>
+        <div class="tab-links">
             <a href="{{ route('items.index') }}">おすすめ</a>
             <a href="{{ route('items.index', ['tab' => 'mylist']) }}">マイリスト</a>
         </div>
 
         <hr>
 
-        <div>
+        <div class="item-list">
             @forelse ($items as $item)
-                <a href="{{ route('items.show', ['item_id' => $item->id]) }}" style="text-decoration: none; color: inherit;">
-                    <div style="margin-bottom: 24px;">
-                        <div style="width: 200px; height: 200px; background: #eeeeee; display: flex; align-items: center; justify-content: center; position: relative;">
-                            {{ $item->name }}
+                <a
+                    href="{{ route('items.show', ['item_id' => $item->id]) }}"
+                    class="item-card"
+                >
+                    <div class="item-image">
+                        {{ $item->name }}
 
-                            @if ($item->purchase)
-                                <span style="position: absolute; top: 8px; left: 8px; background: #ff5555; color: #ffffff; padding: 4px 8px; font-weight: bold;">
-                                    Sold
-                                </span>
-                            @endif
-                        </div>
-
-                        <p>{{ $item->name }}</p>
-                        <p>¥{{ number_format($item->price) }}</p>
+                        @if ($item->purchase)
+                            <div class="sold-overlay">Sold</div>
+                        @endif
                     </div>
+
+                    <p>{{ $item->name }}</p>
+                    <p>¥{{ number_format($item->price) }}</p>
                 </a>
             @empty
                 <p>表示する商品がありません。</p>
@@ -73,4 +72,67 @@
         </div>
     </main>
 </body>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    header {
+        padding: 12px 24px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    header a {
+        margin-right: 16px;
+    }
+
+    main {
+        padding: 24px;
+    }
+
+    .tab-links {
+        margin-bottom: 16px;
+    }
+
+    .tab-links a {
+        margin-right: 16px;
+    }
+
+    .item-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+    }
+
+    .item-card {
+        display: block;
+        width: 200px;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .item-image {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        background: #eeeeee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sold-overlay {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        padding: 6px 14px;
+        background: #ff5555;
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+    }
+</style>
 </html>

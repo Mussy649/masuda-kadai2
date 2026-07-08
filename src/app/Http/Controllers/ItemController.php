@@ -62,7 +62,13 @@ class ItemController extends Controller
                 ->exists();
         }
 
-        return view('items.show', compact('item', 'isLiked'));
+        $isPurchased = DB::table('purchases')
+            ->where('item_id', $item_id)
+            ->exists();
+
+        $isOwnItem = Auth::check() && (int) $item->user_id === (int) Auth::id();
+
+        return view('items.show', compact('item', 'isLiked', 'isPurchased', 'isOwnItem'));
     }
 
     public function create()
@@ -141,7 +147,7 @@ class ItemController extends Controller
                 }
             });
 
-            return redirect()->route('items.index');
+            return redirect()->route('mypage.index', ['page' => 'sell']);
         } catch (\Throwable $e) {
             if ($imagePath) {
                 Storage::disk('public')->delete($imagePath);
