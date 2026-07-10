@@ -52,7 +52,11 @@ class DatabaseSeeder extends Seeder
             ['id' => 8, 'name' => 'ゲーム', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 9, 'name' => 'スポーツ', 'created_at' => $now, 'updated_at' => $now],
             ['id' => 10, 'name' => 'キッチン', 'created_at' => $now, 'updated_at' => $now],
-        ]);
+            ['id' => 11, 'name' => 'ハンドメイド', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 12, 'name' => 'アクセサリー', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 13, 'name' => 'おもちゃ', 'created_at' => $now, 'updated_at' => $now],
+            ['id' => 14, 'name' => 'ベビー・キッズ', 'created_at' => $now, 'updated_at' => $now],
+            ]);
 
         DB::table('conditions')->insert([
             ['id' => 1, 'name' => '良好', 'created_at' => $now, 'updated_at' => $now],

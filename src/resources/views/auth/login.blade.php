@@ -3,32 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>ログイン</title>
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
 </head>
 <body>
-    <h1>ログイン</h1>
-
-    <form action="/login" method="post">
-        @csrf
-
-        <div>
-            <label for="email">メールアドレス</label>
-            <input type="email" name="email" id="email" value="{{ old('email') }}">
-            @error('email')
-                <p>{{ $message }}</p>
-            @enderror
+    <header class="site-header">
+        <div class="site-header__inner">
+            <a href="{{ route('items.index') }}" class="site-logo">
+                <img src="{{ asset('images/coachtech-logo.png') }}" alt="COACHTECH">
+            </a>
         </div>
+    </header>
 
-        <div>
-            <label for="password">パスワード</label>
-            <input type="password" name="password" id="password">
-            @error('password')
-                <p>{{ $message }}</p>
-            @enderror
+    <main class="auth-page">
+        <div class="auth-container">
+            <h1 class="auth-title">ログイン</h1>
+
+            <form action="{{ route('login') }}" method="POST" class="auth-form" novalidate>
+                @csrf
+
+                <div class="form-group">
+                    <label for="email" class="form-label">メールアドレス</label>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        class="form-input"
+                        value="{{ old('email') }}"
+                    >
+                    @error('email')
+                        <p class="error-message">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">パスワード</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        class="form-input"
+                    >
+                    @error('password')
+                        <p class="error-message">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <button type="submit" class="auth-button">ログインする</button>
+            </form>
+
+            <div class="auth-link">
+                <a href="{{ route('register') }}">会員登録はこちら</a>
+            </div>
         </div>
-
-        <button type="submit">ログインする</button>
-    </form>
-
-    <a href="/register">会員登録はこちら</a>
+    </main>
 </body>
 </html>

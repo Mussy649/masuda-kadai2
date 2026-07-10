@@ -1,0 +1,52 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, "Helvetica Neue", sans-serif;
+    color: #333333;
+    background: #ffffff;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+.site-header {
+    width: 100%;
+    height: 64px;
+    background: #000000;
+}
+
+.site-header__inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+}
+
+.site-logo {
+    display: inline-flex;
+    align-items: center;
+}
+
+.site-logo img {
+    height: 28px;
+    width: auto;
+    display: block;
+}
+
+.error-message {
+    margin: 6px 0 0;
+    color: #ff5555;
+    font-size: 13px;
+}

@@ -1,0 +1,362 @@
+.purchase-header__inner {
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.header-search {
+    flex: 1;
+    max-width: 500px;
+}
+
+.header-search__input {
+    width: 100%;
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 15px;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-nav__form {
+    margin: 0;
+}
+
+.header-nav__button {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.header-nav__link {
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.header-nav__sell {
+    min-width: 80px;
+    padding: 8px 18px;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #000000;
+    font-size: 15px;
+    text-align: center;
+}
+
+.purchase-page {
+    width: 100%;
+    padding: 64px 0 80px;
+}
+
+.purchase-form {
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 80px;
+    align-items: start;
+}
+
+.purchase-main {
+    min-width: 0;
+}
+
+.purchase-item {
+    display: flex;
+    gap: 32px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.purchase-item__image {
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eeeeee;
+    font-size: 16px;
+}
+
+.purchase-item__information {
+    padding-top: 8px;
+}
+
+.purchase-item__name {
+    margin: 0 0 16px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.purchase-item__price {
+    margin: 0;
+    font-size: 24px;
+}
+
+.purchase-section {
+    padding: 36px 32px 48px;
+    border-bottom: 1px solid #dddddd;
+}
+
+.purchase-section__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.purchase-section__content {
+    margin-top: 24px;
+}
+
+.purchase-select {
+    width: 280px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #5f5f5f;
+    border-radius: 3px;
+    background: #ffffff;
+    font-size: 15px;
+}
+
+.purchase-address__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.purchase-address__change-link {
+    color: #0073cc;
+    font-size: 15px;
+}
+
+.purchase-address__content {
+    margin-top: 24px;
+    padding-left: 32px;
+}
+
+.purchase-address__postal-code,
+.purchase-address__text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.purchase-address__postal-code {
+    margin-bottom: 8px;
+}
+
+.purchase-summary {
+    width: 100%;
+}
+
+.purchase-summary__table {
+    width: 100%;
+    border: 1px solid #dddddd;
+    border-collapse: collapse;
+}
+
+.purchase-summary__table th,
+.purchase-summary__table td {
+    width: 50%;
+    height: 72px;
+    padding: 16px;
+    border: 1px solid #dddddd;
+    font-size: 16px;
+    text-align: center;
+}
+
+.purchase-summary__table th {
+    font-weight: bold;
+}
+
+.purchase-button {
+    width: 100%;
+    height: 56px;
+    margin-top: 32px;
+    border: none;
+    border-radius: 4px;
+    background: #ff5555;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.purchase-button:hover {
+    opacity: 0.9;
+}
+
+/* PC想定：1400px〜1540px */
+@media screen and (min-width: 1400px) and (max-width: 1540px) {
+    .purchase-form {
+        max-width: 1400px;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        gap: 80px;
+    }
+}
+
+/* タブレット想定：768px〜850px */
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .site-header {
+        height: auto;
+    }
+
+    .purchase-header__inner {
+        min-height: 64px;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 24px;
+    }
+
+    .site-logo img {
+        height: 24px;
+    }
+
+    .header-search {
+        order: 3;
+        width: 100%;
+        max-width: none;
+        flex-basis: 100%;
+    }
+
+    .header-nav {
+        gap: 14px;
+    }
+
+    .header-nav__button,
+    .header-nav__link,
+    .header-nav__sell {
+        font-size: 13px;
+    }
+
+    .header-nav__sell {
+        min-width: 64px;
+        padding: 6px 14px;
+    }
+
+    .purchase-page {
+        padding: 48px 0 64px;
+    }
+
+    .purchase-form {
+        width: 92%;
+        grid-template-columns: minmax(0, 1fr) 260px;
+        gap: 32px;
+    }
+
+    .purchase-item {
+        gap: 24px;
+        padding-bottom: 36px;
+    }
+
+    .purchase-item__image {
+        width: 130px;
+        height: 130px;
+    }
+
+    .purchase-item__name {
+        font-size: 23px;
+    }
+
+    .purchase-item__price {
+        font-size: 20px;
+    }
+
+    .purchase-section {
+        padding: 30px 16px 40px;
+    }
+
+    .purchase-section__title {
+        font-size: 18px;
+    }
+
+    .purchase-select {
+        width: 240px;
+        max-width: 100%;
+    }
+
+    .purchase-address__content {
+        padding-left: 16px;
+    }
+
+    .purchase-summary__table th,
+    .purchase-summary__table td {
+        height: 64px;
+        padding: 12px 8px;
+        font-size: 14px;
+    }
+
+    .purchase-button {
+        height: 52px;
+        font-size: 16px;
+    }
+}
+
+/* 767px以下の保険 */
+@media screen and (max-width: 767px) {
+    .site-header {
+        height: auto;
+    }
+
+    .purchase-header__inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 20px;
+    }
+
+    .header-search {
+        width: 100%;
+        max-width: none;
+    }
+
+    .header-nav {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .purchase-page {
+        padding: 40px 0 56px;
+    }
+
+    .purchase-form {
+        width: 90%;
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .purchase-item {
+        flex-direction: column;
+    }
+
+    .purchase-item__image {
+        width: 160px;
+        height: 160px;
+    }
+
+    .purchase-section {
+        padding: 28px 0 36px;
+    }
+
+    .purchase-select {
+        width: 100%;
+    }
+
+    .purchase-address__content {
+        padding-left: 0;
+    }
+
+    .purchase-summary {
+        width: 100%;
+    }
+}
