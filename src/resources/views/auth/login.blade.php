@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>ログイン</title>
     <link rel="stylesheet" href="{{ asset('css/common.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth/auth.css') }}">
 </head>
 <body>
     <header class="site-header">
