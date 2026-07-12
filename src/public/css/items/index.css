@@ -52,10 +52,6 @@
     .item-index__inner {
         max-width: 1380px;
     }
-
-    .item-list {
-        grid-template-columns: repeat(4, 1fr);
-    }
 }
 
 /* タブレット想定 768px〜850px */
@@ -89,7 +85,6 @@
     }
 
     .item-list {
-        grid-template-columns: repeat(3, 1fr);
         gap: 36px 24px;
     }
 }
