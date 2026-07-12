@@ -87,15 +87,13 @@
     max-width: 1380px;
     margin: 0 auto;
     padding-top: 40px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
     gap: 40px 32px;
 }
 
 /* PC想定 1400px〜1540px */
 @media screen and (min-width: 1400px) and (max-width: 1540px) {
     .item-list {
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
     }
 }
 

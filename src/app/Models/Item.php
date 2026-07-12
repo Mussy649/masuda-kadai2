@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Item extends Model
 {
@@ -47,5 +49,32 @@ class Item extends Model
     public function purchase()
     {
         return $this->hasOne(Purchase::class);
+    }
+
+    /**
+     * 表示可能な商品画像 URL を返す。
+     *
+     * - image_path が空の場合は null を返す
+     * - http:// または https:// で始まる外部 URL はそのまま返す
+     * - それ以外は storage/public に実ファイルが存在する場合のみ URL を返す
+     * - 実ファイルが存在しない場合は null を返す
+     *
+     * @return string|null
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!$this->image_path) {
+            return null;
+        }
+
+        if (Str::startsWith($this->image_path, ['http://', 'https://'])) {
+            return $this->image_path;
+        }
+
+        if (!Storage::disk('public')->exists($this->image_path)) {
+            return null;
+        }
+
+        return asset('storage/' . $this->image_path);
     }
 }

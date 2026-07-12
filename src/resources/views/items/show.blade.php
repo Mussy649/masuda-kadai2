@@ -33,7 +33,15 @@
     <main>
         <div class="item-detail">
             <div class="item-detail__image">
-                {{ $item->name }}
+                @if ($item->image_url)
+                    <img
+                        src="{{ $item->image_url }}"
+                        alt="{{ $item->name }}"
+                        class="item-detail__image-img"
+                    >
+                @else
+                    {{ $item->name }}
+                @endif
 
                 @if ($isPurchased)
                     <div class="sold-overlay">Sold</div>
@@ -177,6 +185,17 @@
         align-items: center;
         justify-content: center;
         font-size: 18px;
+        overflow: hidden;
+    }
+
+    .item-detail__image-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
     }
 
     .sold-overlay {
@@ -188,6 +207,7 @@
         color: #fff;
         font-weight: bold;
         font-size: 18px;
+        z-index: 1;
     }
 
     .item-detail__content {

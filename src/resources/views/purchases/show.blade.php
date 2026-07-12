@@ -67,7 +67,15 @@
             <div class="purchase-main">
                 <section class="purchase-item">
                     <div class="purchase-item__image">
-                        商品画像
+                        @if ($item->image_url)
+                            <img
+                                src="{{ $item->image_url }}"
+                                alt="{{ $item->name }}"
+                                class="purchase-item__image-img"
+                            >
+                        @else
+                            {{ $item->name }}
+                        @endif
                     </div>
 
                     <div class="purchase-item__information">

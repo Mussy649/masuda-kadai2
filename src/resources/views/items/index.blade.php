@@ -72,7 +72,15 @@
                         class="item-card"
                     >
                         <div class="item-card__image">
-                            {{ $item->name }}
+                            @if ($item->image_url)
+                                <img
+                                    src="{{ $item->image_url }}"
+                                    alt="{{ $item->name }}"
+                                    class="item-card__image-img"
+                                >
+                            @else
+                                {{ $item->name }}
+                            @endif
 
                             @if ($item->purchase)
                                 <div class="sold-overlay">Sold</div>
