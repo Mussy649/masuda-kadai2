@@ -1,323 +1,331 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>商品詳細</title>
+
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/items/show.css') }}">
 </head>
+
 <body>
-    <header>
-        <a href="{{ route('items.index') }}">COACHTECH</a>
+    <header class="site-header">
+        <div class="site-header__inner detail-header__inner">
+            <a href="{{ route('items.index') }}" class="site-logo">
+                <img
+                    src="{{ asset('images/coachtech-logo.png') }}"
+                    alt="COACHTECH"
+                >
+            </a>
 
-        <form action="{{ route('items.index') }}" method="GET">
-            <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="なにをお探しですか？">
-            <button type="submit">検索</button>
-        </form>
+            <form
+                action="{{ route('items.index') }}"
+                method="GET"
+                class="header-search"
+            >
+                <input
+                    type="text"
+                    name="keyword"
+                    value="{{ request('keyword') }}"
+                    placeholder="なにをお探しですか？"
+                    class="header-search__input"
+                >
+            </form>
 
-        <nav>
-            @auth
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit">ログアウト</button>
-                </form>
+            <nav class="header-nav">
+                @auth
+                    <form
+                        action="{{ route('logout') }}"
+                        method="POST"
+                        class="header-nav__form"
+                    >
+                        @csrf
 
-                <a href="/mypage">マイページ</a>
-                <a href="/sell">出品</a>
-            @else
-                <a href="/login">ログイン</a>
-                <a href="/register">会員登録</a>
-                <a href="/sell">出品</a>
-            @endauth
-        </nav>
+                        <button
+                            type="submit"
+                            class="header-nav__button"
+                        >
+                            ログアウト
+                        </button>
+                    </form>
+
+                    <a
+                        href="{{ route('mypage.index') }}"
+                        class="header-nav__link"
+                    >
+                        マイページ
+                    </a>
+                @else
+                    <a
+                        href="{{ route('login') }}"
+                        class="header-nav__link"
+                    >
+                        ログイン
+                    </a>
+
+                    <a
+                        href="{{ route('mypage.index') }}"
+                        class="header-nav__link"
+                    >
+                        マイページ
+                    </a>
+                @endauth
+
+                <a
+                    href="{{ route('items.create') }}"
+                    class="header-nav__sell"
+                >
+                    出品
+                </a>
+            </nav>
+        </div>
     </header>
 
-    <main>
+    <main class="detail-page">
         <div class="item-detail">
             <div class="item-detail__image">
                 @if ($item->image_url)
                     <img
                         src="{{ $item->image_url }}"
                         alt="{{ $item->name }}"
-                        class="item-detail__image-img"
+                        class="item-detail__image-file"
                     >
                 @else
-                    {{ $item->name }}
+                    <span class="item-detail__image-placeholder">
+                        {{ $item->name }}
+                    </span>
                 @endif
 
                 @if ($isPurchased)
-                    <div class="sold-overlay">Sold</div>
+                    <div class="sold-overlay">
+                        Sold
+                    </div>
                 @endif
             </div>
 
             <div class="item-detail__content">
-                <h1 class="item-detail__name">{{ $item->name }}</h1>
+                <h1 class="item-detail__name">
+                    {{ $item->name }}
+                </h1>
 
                 @if ($item->brand_name)
-                    <p>ブランド：{{ $item->brand_name }}</p>
+                    <p class="item-detail__brand">
+                        ブランド：{{ $item->brand_name }}
+                    </p>
                 @endif
 
-                <p class="item-detail__price">¥{{ number_format($item->price) }}</p>
+                <p class="item-detail__price">
+                    ¥{{ number_format($item->price) }}
+                    <span class="item-detail__tax">
+                        （税込）
+                    </span>
+                </p>
 
-                <div class="item-detail__icons">
-                    @if ($isOwnItem || $isPurchased)
-                        <span>♡ {{ $item->likes_count }}</span>
-                    @else
-                        @auth
-                            @if ($isLiked)
-                                <form action="{{ route('likes.destroy', ['item_id' => $item->id]) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="like-button">♥ {{ $item->likes_count }}</button>
-                                </form>
-                            @else
-                                <form action="{{ route('likes.store', ['item_id' => $item->id]) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="like-button">♡ {{ $item->likes_count }}</button>
-                                </form>
-                            @endif
+                <div class="item-actions">
+                    <div class="item-action">
+                        @if ($isOwnItem || $isPurchased)
+                            <span class="item-action__icon">
+                                ♡
+                            </span>
                         @else
-                            <span>♡ {{ $item->likes_count }}</span>
-                        @endauth
-                    @endif
+                            @auth
+                                @if ($isLiked)
+                                    <form
+                                        action="{{ route('likes.destroy', ['item_id' => $item->id]) }}"
+                                        method="POST"
+                                    >
+                                        @csrf
+                                        @method('DELETE')
 
-                    <span>💬 {{ $item->comments_count }}</span>
+                                        <button
+                                            type="submit"
+                                            class="item-action__button item-action__button--liked"
+                                            aria-label="いいねを解除する"
+                                        >
+                                            ♥
+                                        </button>
+                                    </form>
+                                @else
+                                    <form
+                                        action="{{ route('likes.store', ['item_id' => $item->id]) }}"
+                                        method="POST"
+                                    >
+                                        @csrf
+
+                                        <button
+                                            type="submit"
+                                            class="item-action__button"
+                                            aria-label="いいねする"
+                                        >
+                                            ♡
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <span class="item-action__icon">
+                                    ♡
+                                </span>
+                            @endauth
+                        @endif
+
+                        <span class="item-action__count">
+                            {{ $item->likes_count }}
+                        </span>
+                    </div>
+
+                    <div class="item-action">
+                        <span class="item-action__icon item-action__icon--comment">
+                            ♡
+                        </span>
+
+                        <span class="item-action__count">
+                            {{ $item->comments_count }}
+                        </span>
+                    </div>
                 </div>
 
                 @if ($isPurchased)
-                    <div class="sold-label">Sold</div>
+                    <div class="sold-label">
+                        Sold
+                    </div>
                 @elseif ($isOwnItem)
-                    <div class="own-item-message">自分が出品した商品です</div>
+                    <div class="own-item-message">
+                        自分が出品した商品です
+                    </div>
                 @else
-                    <a href="{{ route('purchase.show', ['item_id' => $item->id]) }}" class="purchase-button">購入手続きへ</a>
+                    <a
+                        href="{{ route('purchase.show', ['item_id' => $item->id]) }}"
+                        class="purchase-button"
+                    >
+                        購入手続きへ
+                    </a>
                 @endif
 
-                <h2>商品説明</h2>
-                <p>{{ $item->description }}</p>
+                <section class="item-section">
+                    <h2 class="item-section__title">
+                        商品説明
+                    </h2>
 
-                <h2>商品の情報</h2>
+                    <p class="item-section__description">
+                        {{ $item->description }}
+                    </p>
+                </section>
 
-                <p>
-                    カテゴリー：
-                    @foreach ($item->categories as $category)
-                        <span class="category-label">{{ $category->name }}</span>
-                    @endforeach
-                </p>
+                <section class="item-section">
+                    <h2 class="item-section__title">
+                        商品の情報
+                    </h2>
 
-                <p>商品の状態：{{ $item->condition->name }}</p>
+                    <dl class="item-information">
+                        <div class="item-information__row">
+                            <dt class="item-information__label">
+                                カテゴリー
+                            </dt>
 
-                <h2>コメント</h2>
+                            <dd class="item-information__value">
+                                <div class="category-list">
+                                    @foreach ($item->categories as $category)
+                                        <span class="category-label">
+                                            {{ $category->name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </dd>
+                        </div>
 
-                <div>
-                    @foreach ($item->comments as $comment)
-                        <div class="comment-item">
-                            <div class="comment-user">
-                                @if ($comment->user && $comment->user->profile_image)
-                                    <img
-                                        src="{{ asset('storage/' . $comment->user->profile_image) }}"
-                                        alt="プロフィール画像"
-                                        class="comment-user__image"
-                                    >
-                                @else
-                                    <div class="comment-user__placeholder"></div>
-                                @endif
+                        <div class="item-information__row">
+                            <dt class="item-information__label">
+                                商品の状態
+                            </dt>
 
-                                <p class="comment-user__name">
-                                    {{ $comment->user ? $comment->user->name : 'ユーザー' }}
+                            <dd class="item-information__value">
+                                {{ $item->condition->name }}
+                            </dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <section class="comment-section">
+                    <h2 class="comment-section__title">
+                        コメント（{{ $item->comments_count }}）
+                    </h2>
+
+                    <div class="comment-list">
+                        @forelse ($item->comments as $comment)
+                            <div class="comment-item">
+                                <div class="comment-user">
+                                    @if ($comment->user && $comment->user->profile_image)
+                                        <img
+                                            src="{{ asset('storage/' . $comment->user->profile_image) }}"
+                                            alt="プロフィール画像"
+                                            class="comment-user__image"
+                                        >
+                                    @else
+                                        <div class="comment-user__placeholder"></div>
+                                    @endif
+
+                                    <p class="comment-user__name">
+                                        {{ $comment->user ? $comment->user->name : 'ユーザー' }}
+                                    </p>
+                                </div>
+
+                                <p class="comment-text">
+                                    {{ $comment->comment }}
                                 </p>
                             </div>
+                        @empty
+                            <p class="comment-list__empty">
+                                まだコメントはありません。
+                            </p>
+                        @endforelse
+                    </div>
 
-                            <p class="comment-text">{{ $comment->comment }}</p>
-                        </div>
-                    @endforeach
-                </div>
+                    @auth
+                        <form
+                            action="{{ route('comments.store', ['item_id' => $item->id]) }}"
+                            method="POST"
+                            class="comment-form"
+                        >
+                            @csrf
 
-                @auth
-                    <form action="{{ route('comments.store', ['item_id' => $item->id]) }}" method="POST">
-                        @csrf
+                            <label
+                                for="comment"
+                                class="comment-form__label"
+                            >
+                                商品へのコメント
+                            </label>
 
-                        <div>
-                            <textarea name="comment" rows="4" cols="50" placeholder="商品へのコメントを入力してください">{{ old('comment') }}</textarea>
-                        </div>
+                            <textarea
+                                id="comment"
+                                name="comment"
+                                class="comment-form__textarea"
+                            >{{ old('comment') }}</textarea>
 
-                        @error('comment')
-                            <p style="color: red;">{{ $message }}</p>
-                        @enderror
+                            @error('comment')
+                                <p class="error-message">
+                                    {{ $message }}
+                                </p>
+                            @enderror
 
-                        <button type="submit">コメントを送信する</button>
-                    </form>
-                @else
-                    <p>コメントを送信するにはログインが必要です。</p>
-                @endauth
+                            <button
+                                type="submit"
+                                class="comment-form__button"
+                            >
+                                コメントを送信する
+                            </button>
+                        </form>
+                    @else
+                        <p class="comment-login-message">
+                            コメントを送信するにはログインが必要です。
+                        </p>
+                    @endauth
+                </section>
             </div>
         </div>
     </main>
 </body>
 
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        color: #333;
-    }
-
-    header {
-        padding: 12px 24px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    header a {
-        margin-right: 16px;
-    }
-
-    .item-detail {
-        display: flex;
-        gap: 56px;
-        max-width: 1100px;
-        margin: 60px auto;
-        padding: 0 24px;
-    }
-
-    .item-detail__image {
-        position: relative;
-        width: 420px;
-        height: 420px;
-        background: #eeeeee;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        overflow: hidden;
-    }
-
-    .item-detail__image-img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .sold-overlay {
-        position: absolute;
-        top: 16px;
-        left: 16px;
-        padding: 8px 18px;
-        background: #ff5555;
-        color: #fff;
-        font-weight: bold;
-        font-size: 18px;
-        z-index: 1;
-    }
-
-    .item-detail__content {
-        flex: 1;
-    }
-
-    .item-detail__name {
-        font-size: 32px;
-        margin-bottom: 12px;
-    }
-
-    .item-detail__price {
-        font-size: 24px;
-        margin: 16px 0;
-    }
-
-    .item-detail__icons {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin: 16px 0;
-    }
-
-    .like-button {
-        border: none;
-        background: transparent;
-        font-size: 20px;
-        cursor: pointer;
-        padding: 0;
-    }
-
-    .purchase-button {
-        display: inline-block;
-        margin: 16px 0;
-        padding: 10px 40px;
-        background: #ff5555;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        text-decoration: none;
-    }
-
-    .sold-label {
-        display: inline-block;
-        margin: 16px 0;
-        padding: 10px 40px;
-        background: #999;
-        color: #fff;
-        font-weight: bold;
-        text-align: center;
-    }
-
-    .own-item-message {
-        margin: 16px 0;
-        padding: 10px 20px;
-        background: #eeeeee;
-        color: #333;
-        text-align: center;
-    }
-
-    .category-label {
-        display: inline-block;
-        margin-right: 8px;
-        padding: 4px 12px;
-        background: #eeeeee;
-        border-radius: 12px;
-    }
-
-    .comment-item {
-        margin-bottom: 16px;
-    }
-
-    .comment-user {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 6px;
-    }
-
-    .comment-user__image,
-    .comment-user__placeholder {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: #dddddd;
-        object-fit: cover;
-    }
-
-    .comment-user__name {
-        margin: 0;
-        font-weight: bold;
-    }
-
-    .comment-text {
-        padding: 8px;
-        background: #f5f5f5;
-    }
-
-    @media screen and (max-width: 768px) {
-        .item-detail {
-            flex-direction: column;
-            margin: 32px auto;
-        }
-
-        .item-detail__image {
-            width: 100%;
-            max-width: 420px;
-            height: 320px;
-        }
-    }
-</style>
 </html>

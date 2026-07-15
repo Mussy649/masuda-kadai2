@@ -47,9 +47,18 @@ class ItemController extends Controller
         return view('items.index', compact('items'));
     }
 
+
     public function show($item_id)
     {
-        $item = Item::with(['condition', 'categories', 'user', 'comments.user'])
+        $item = Item::with([
+            'condition',
+            'categories',
+            'user',
+            'comments' => function ($query) {
+                $query->with('user')
+                    ->latest();
+            },
+        ])
             ->withCount(['likes', 'comments'])
             ->findOrFail($item_id);
 
@@ -63,14 +72,17 @@ class ItemController extends Controller
         }
 
         $isPurchased = DB::table('purchases')
-            ->where('item_id', $item_id)
-            ->exists();
+                ->where('item_id', $item_id)
+                ->exists();
 
-        $isOwnItem = Auth::check() && (int) $item->user_id === (int) Auth::id();
+        $isOwnItem = Auth::check()
+            && (int) $item->user_id === (int) Auth::id();
 
-        return view('items.show', compact('item', 'isLiked', 'isPurchased', 'isOwnItem'));
+        return view(
+            'items.show',
+            compact('item', 'isLiked', 'isPurchased', 'isOwnItem')
+        );
     }
-
     public function create()
     {
         $categories = Category::all();

@@ -35,7 +35,7 @@
                     <a href="/sell" class="header-nav__sell">出品</a>
                 @else
                     <a href="/login" class="header-nav__link">ログイン</a>
-                    <a href="/register" class="header-nav__link">マイページ</a>
+                    <a href="{{ route('login') }}" class="header-nav__link">マイページ</a>
                     <a href="/sell" class="header-nav__sell">出品</a>
                 @endauth
             </nav>
