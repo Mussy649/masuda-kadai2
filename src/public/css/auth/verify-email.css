@@ -1,0 +1,163 @@
+/* ========================================
+   メール認証画面：ヘッダー
+======================================== */
+
+.verify-header__inner {
+    min-height: 80px;
+    padding: 12px 40px;
+}
+
+.verify-header__inner .site-logo {
+    display: flex;
+    align-items: center;
+    width: 220px;
+}
+
+.verify-header__inner .site-logo img {
+    display: block;
+    width: 220px;
+    height: auto;
+    object-fit: contain;
+}
+
+
+/* ========================================
+   メール認証画面
+======================================== */
+
+.verify-page {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    padding: 190px 24px 80px;
+}
+
+.verify-card {
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
+}
+
+.verify-card__message {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.8;
+}
+
+.verify-card__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 260px;
+    min-height: 60px;
+    margin: 48px auto 0;
+    border: 1px solid #777777;
+    border-radius: 8px;
+    background: #d9d9d9;
+    color: #333333;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.verify-card__button:hover {
+    opacity: 0.85;
+}
+
+.verify-card__resend-form {
+    margin-top: 28px;
+}
+
+.verify-card__resend-button {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #0073cc;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.verify-card__resend-button:hover {
+    text-decoration: underline;
+}
+
+.verify-card__success {
+    margin: 0 0 28px;
+    padding: 14px 20px;
+    border-radius: 4px;
+    background: #e8f7ea;
+    color: #277a35;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+
+/* ========================================
+   タブレット：768px～850px
+======================================== */
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+    .verify-header__inner {
+        min-height: 64px;
+        padding: 12px 24px;
+    }
+
+    .verify-header__inner .site-logo {
+        width: 190px;
+    }
+
+    .verify-header__inner .site-logo img {
+        width: 190px;
+    }
+
+    .verify-page {
+        min-height: calc(100vh - 64px);
+        padding-top: 150px;
+    }
+
+    .verify-card__message {
+        font-size: 17px;
+    }
+}
+
+
+/* ========================================
+   スマートフォン：767px以下
+======================================== */
+
+@media screen and (max-width: 767px) {
+    .verify-header__inner {
+        min-height: 64px;
+        padding: 14px 20px;
+    }
+
+    .verify-header__inner .site-logo {
+        width: 180px;
+    }
+
+    .verify-header__inner .site-logo img {
+        width: 180px;
+    }
+
+    .verify-page {
+        min-height: calc(100vh - 64px);
+        padding: 110px 20px 60px;
+    }
+
+    .verify-card__message {
+        font-size: 16px;
+    }
+
+    .verify-card__button {
+        width: 220px;
+        min-height: 54px;
+        margin-top: 40px;
+        font-size: 16px;
+    }
+
+    .verify-card__resend-button {
+        font-size: 14px;
+    }
+}

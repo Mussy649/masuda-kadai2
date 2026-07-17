@@ -25,7 +25,14 @@ Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show
 | ここから下は auth ミドルウェア内
 */
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    // /home
+    // マイページ
+    // 出品
+    // いいね
+    // コメント
+    // 購入
+
 
     /*
     |--------------------------------------------------------------------------

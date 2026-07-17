@@ -80,7 +80,7 @@ composer install
 cp .env.example .env
 ```
 
-### 6. .envファイルのDB設定を変更
+### 6. `.env`ファイルのDB・メール設定を変更
 
 `.env` ファイル内の該当箇所を以下のように変更します。
 
@@ -91,6 +91,15 @@ DB_PORT=3306
 DB_DATABASE=laravel_db
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=noreply@coachtech.local
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
 ### 7. アプリケーションキーを作成
@@ -123,6 +132,28 @@ php artisan storage:link
 php artisan optimize:clear
 ```
 
+### 12. MailHogを使用したメール認証
+
+MailHogの受信画面をブラウザで開きます。
+
+```text
+http://localhost:8025
+```
+
+メール認証の確認手順は以下のとおりです。
+
+1. 会員登録画面から新しいユーザーを登録する
+2. メール認証誘導画面が表示される
+3. MailHogの受信画面を開く
+4. 届いた「Verify Email Address」のメールを開く
+5. メール内の認証リンクをクリックする
+6. 認証完了後、プロフィール設定画面へ遷移する
+7. プロフィールを登録すると商品一覧画面へ遷移する
+
+メール認証誘導画面の「認証メールを再送する」をクリックすると、認証メールを再送できます。
+
+未認証のまま再度ログインした場合は、通常画面へは進まず、メール認証誘導画面へ遷移します。
+
 ## 使用技術
 
 - PHP 8.1
@@ -132,6 +163,7 @@ php artisan optimize:clear
 - nginx
 - Docker / Docker Compose
 - phpMyAdmin
+- MailHog
 
 ## URL
 
@@ -140,6 +172,8 @@ php artisan optimize:clear
 - ログイン画面：http://localhost/login
 - プロフィール画面：http://localhost/mypage
 - 商品出品画面：http://localhost/sell
+- メール認証誘導画面：http://localhost/email/verify
+- MailHog：http://localhost:8025
 - phpMyAdmin：http://localhost:8080
 
 ## ER図
@@ -148,13 +182,15 @@ php artisan optimize:clear
 
 ## 補足
 
-本アプリは、模擬案件として作成するフリマアプリです。
+本アプリは、フリーマーケットアプリの要件定義書およびFigmaの画面仕様に基づいて実装しています。
 
-画面構成はFigmaの参考UIを基準にし、指定された要件に沿って実装しています。
+出品時にアップロードされた商品画像およびプロフィール画像は、Laravelの`storage`ディレクトリへ保存し、データベースには画像の保存パスを登録しています。画像を表示するため、環境構築時に以下のコマンドを実行してください。
 
-商品画像やプロフィール画像はstorageに保存し、DBには画像パスを保存する方針です。
+```bash
+php artisan storage:link
+```
 
-データ管理は、主に以下の8テーブルで構成予定です。
+データベースは、主に以下の8テーブルで構成されています。
 
 ```text
 users
@@ -167,6 +203,10 @@ comments
 purchases
 ```
 
-購入時の送付先住所は、ユーザーの基本住所とは分けて、購入ごとの送付先情報として管理する方針です。
+`items`と`categories`は多対多の関係となっており、中間テーブルの`category_item`を使用して、1つの商品に複数のカテゴリーを設定しています。
 
-※実装の進行に合わせて、READMEの内容は提出前に最終更新します。
+商品購入時には、購入画面で選択した配送先情報を`purchases`テーブルへ保存します。購入後にユーザーのプロフィール住所を変更しても、購入時点の配送先情報は変更されません。
+
+メール認証にはMailHogを使用しています。新規会員登録後、MailHogに届いた認証メール内のリンクからメール認証を完了してください。未認証のユーザーは、通常のアプリ機能を利用できません。
+
+決済機能にはStripeのテスト環境を使用しているため、実際の決済は発生しません。
