@@ -26,14 +26,6 @@ Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('items.show
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    // /home
-    // マイページ
-    // 出品
-    // いいね
-    // コメント
-    // 購入
-
-
     /*
     |--------------------------------------------------------------------------
     | ログイン後リダイレクト

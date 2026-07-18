@@ -83,6 +83,7 @@ class ItemController extends Controller
             compact('item', 'isLiked', 'isPurchased', 'isOwnItem')
         );
     }
+
     public function create()
     {
         $categories = Category::all();

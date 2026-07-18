@@ -25,7 +25,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'postal_code',
         'address',
         'building',
-
     ];
 
     /**
@@ -59,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function comments()
     {
-    return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class);
     }
 
     public function purchases()
@@ -69,6 +68,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasCompletedProfile()
     {
-    return !empty($this->postal_code) && !empty($this->address);
+        return !empty($this->postal_code) && !empty($this->address);
     }
 }

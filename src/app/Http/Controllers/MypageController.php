@@ -15,27 +15,27 @@ class MypageController extends Controller
         $user = Auth::user();
         $page = $request->query('page', 'sell');
 
-    if ($page === 'buy') {
-        // 購入日時が新しい順に商品IDを取得
-        $purchasedItemIds = DB::table('purchases')
-            ->where('user_id', $user->id)
-            ->orderByDesc('created_at')
-            ->pluck('item_id');
+        if ($page === 'buy') {
+            // 購入日時が新しい順に商品IDを取得
+            $purchasedItemIds = DB::table('purchases')
+                ->where('user_id', $user->id)
+                ->orderByDesc('created_at')
+                ->pluck('item_id');
 
-        // 取得した購入順を維持して商品を並べる
-        $items = Item::with('purchase')
-            ->whereIn('id', $purchasedItemIds)
-            ->get()
-            ->sortBy(function ($item) use ($purchasedItemIds) {
-                return $purchasedItemIds->search($item->id);
-            })
-            ->values();
-    } else {
-        $items = Item::with('purchase')
-            ->where('user_id', $user->id)
-            ->latest()
-            ->get();
-    }
+            // 取得した購入順を維持して商品を並べる
+            $items = Item::with('purchase')
+                ->whereIn('id', $purchasedItemIds)
+                ->get()
+                ->sortBy(function ($item) use ($purchasedItemIds) {
+                    return $purchasedItemIds->search($item->id);
+                })
+                ->values();
+        } else {
+            $items = Item::with('purchase')
+                ->where('user_id', $user->id)
+                ->latest()
+                ->get();
+        }
 
         return view('mypage.index', compact('user', 'items', 'page'));
     }
