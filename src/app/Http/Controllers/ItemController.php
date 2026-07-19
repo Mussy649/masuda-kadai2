@@ -47,7 +47,6 @@ class ItemController extends Controller
         return view('items.index', compact('items'));
     }
 
-
     public function show($item_id)
     {
         $item = Item::with([
