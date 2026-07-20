@@ -284,39 +284,41 @@
                     </div>
 
                     @auth
-                        <form
-                            action="{{ route('comments.store', ['item_id' => $item->id]) }}"
-                            method="POST"
-                            class="comment-form"
-                        >
-                            @csrf
-
-                            <label
-                                for="comment"
-                                class="comment-form__label"
+                        @if (!$isOwnItem)
+                            <form
+                                action="{{ route('comments.store', ['item_id' => $item->id]) }}"
+                                method="POST"
+                                class="comment-form"
                             >
-                                商品へのコメント
-                            </label>
+                                @csrf
 
-                            <textarea
-                                id="comment"
-                                name="comment"
-                                class="comment-form__textarea"
-                            >{{ old('comment') }}</textarea>
+                                <label
+                                    for="comment"
+                                    class="comment-form__label"
+                                >
+                                    商品へのコメント
+                                </label>
 
-                            @error('comment')
-                                <p class="error-message">
-                                    {{ $message }}
-                                </p>
-                            @enderror
+                                <textarea
+                                    id="comment"
+                                    name="comment"
+                                    class="comment-form__textarea"
+                                >{{ old('comment') }}</textarea>
 
-                            <button
-                                type="submit"
-                                class="comment-form__button"
-                            >
-                                コメントを送信する
-                            </button>
-                        </form>
+                                @error('comment')
+                                    <p class="error-message">
+                                        {{ $message }}
+                                    </p>
+                                @enderror
+
+                                <button
+                                    type="submit"
+                                    class="comment-form__button"
+                                >
+                                    コメントを送信する
+                                </button>
+                            </form>
+                        @endif
                     @else
                         <p class="comment-login-message">
                             コメントを送信するにはログインが必要です。

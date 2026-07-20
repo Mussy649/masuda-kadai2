@@ -2,7 +2,11 @@
    商品詳細画面：ヘッダー
 ======================================== */
 
-.detail-header__inner {
+.site-header__inner.detail-header__inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1260px;
+    margin: 0 auto;
     min-height: 64px;
     padding: 12px 40px;
     gap: 28px;
