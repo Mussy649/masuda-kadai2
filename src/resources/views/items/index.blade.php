@@ -89,7 +89,6 @@
                         </div>
 
                         <p class="item-card__name">{{ $item->name }}</p>
-                        <p class="item-card__price">¥{{ number_format($item->price) }}</p>
                     </a>
                 @empty
                     <p class="item-list__empty">表示する商品がありません。</p>

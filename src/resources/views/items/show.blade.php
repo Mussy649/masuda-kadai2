@@ -209,9 +209,7 @@
                         商品説明
                     </h2>
 
-                    <p class="item-section__description">
-                        {{ $item->description }}
-                    </p>
+                <p class="item-section__description">{{ $item->description }}</p>
                 </section>
 
                 <section class="item-section">
