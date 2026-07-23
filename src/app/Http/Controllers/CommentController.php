@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Models\Item;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, $item_id)
+    public function store(CommentRequest $request, $item_id)
     {
         $item = Item::findOrFail($item_id);
 
@@ -17,20 +17,12 @@ class CommentController extends Controller
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
-        $request->validate(
-            [
-                'comment' => ['required', 'string', 'max:255'],
-            ],
-            [
-                'comment.required' => 'コメントを入力してください。',
-                'comment.string' => 'コメントは文字列で入力してください。',
-                'comment.max' => 'コメントは255文字以内で入力してください。',
-            ]
-);
+        $validated = $request->validated();
+
         DB::table('comments')->insert([
             'user_id' => Auth::id(),
             'item_id' => $item_id,
-            'comment' => $request->comment,
+            'comment' => $validated['comment'],
             'created_at' => now(),
             'updated_at' => now(),
         ]);
