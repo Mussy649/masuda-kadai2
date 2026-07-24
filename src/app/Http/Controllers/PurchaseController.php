@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Requests\AddressRequest;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,45 +109,30 @@ class PurchaseController extends Controller
         return view('purchases.address', compact('item', 'user'));
     }
 
-    public function updateAddress(Request $request, $item_id)
+    public function updateAddress(AddressRequest $request, $item_id)
     {
         $item = Item::findOrFail($item_id);
 
         if ((int) $item->user_id === (int) Auth::id()) {
-            return redirect()->route('items.show', ['item_id' => $item_id]);
+        return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
         $alreadyPurchased = DB::table('purchases')
-            ->where('item_id', $item_id)
-            ->exists();
+        ->where('item_id', $item_id)
+        ->exists();
 
         if ($alreadyPurchased) {
-            return redirect()->route('items.show', ['item_id' => $item_id]);
+        return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
-        $request->validate(
-            [
-                'postal_code' => ['required', 'regex:/^\d{3}-\d{4}$/'],
-                'address' => ['required', 'string', 'max:255'],
-                'building' => ['nullable', 'string', 'max:255'],
-            ],
-            [
-                'postal_code.required' => '郵便番号を入力してください。',
-                'postal_code.regex' => '郵便番号は123-4567の形式で入力してください。',
-                'address.required' => '住所を入力してください。',
-                'address.string' => '住所は文字列で入力してください。',
-                'address.max' => '住所は255文字以内で入力してください。',
-                'building.string' => '建物名は文字列で入力してください。',
-                'building.max' => '建物名は255文字以内で入力してください。',
-            ]
-        );
+        $validated = $request->validated();
 
         $user = Auth::user();
 
         $user->update([
-            'postal_code' => $request->postal_code,
-            'address' => $request->address,
-            'building' => $request->building,
+            'postal_code' => $validated['postal_code'],
+            'address' => $validated['address'],
+            'building' => $validated['building'] ?? null,
         ]);
 
         return redirect()->route('purchase.show', ['item_id' => $item_id]);
