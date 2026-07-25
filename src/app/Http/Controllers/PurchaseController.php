@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\AddressRequest;
+use App\Http\Requests\PurchaseRequest;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,17 +34,8 @@ class PurchaseController extends Controller
 
         return view('purchases.show', compact('item', 'user'));
     }
-
-    public function store(Request $request, $item_id)
+        public function store(PurchaseRequest $request, $item_id)
     {
-        $request->validate(
-            [
-                'payment_method' => ['required'],
-            ],
-            [
-                'payment_method.required' => '支払い方法を選択してください。',
-            ]
-        );
 
         $item = Item::findOrFail($item_id);
 

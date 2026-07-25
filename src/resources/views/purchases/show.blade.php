@@ -151,6 +151,9 @@
                             {{ $user->address }}
                             {{ $user->building }}
                         </p>
+                        @error('address')
+                            <p class="error-message">{{ $message }}</p>
+                        @enderror
                     </div>
                 </section>
             </div>
