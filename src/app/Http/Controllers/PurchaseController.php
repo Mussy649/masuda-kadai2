@@ -32,11 +32,10 @@ class PurchaseController extends Controller
 
         $user = Auth::user();
 
-        return view('purchases.show', compact('item', 'user'));
+            return view('purchases.show', compact('item', 'user'));
     }
-        public function store(PurchaseRequest $request, $item_id)
+    public function store(PurchaseRequest $request, $item_id)
     {
-
         $item = Item::findOrFail($item_id);
 
         if ((int) $item->user_id === (int) Auth::id()) {
@@ -51,33 +50,49 @@ class PurchaseController extends Controller
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $validated = $request->validated();
+        $paymentMethod = $validated['payment_method'];
+        $stripePaymentMethod = $paymentMethod === 'コンビニ払い'
+            ? 'konbini'
+            : 'card';
 
-        $checkoutSession = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'jpy',
-                        'product_data' => [
-                            'name' => $item->name,
-                        ],
-                        'unit_amount' => $item->price,
+    $user = Auth::user();
+
+    Stripe::setApiKey(config('services.stripe.secret'));
+
+    $checkoutSession = Session::create([
+        'payment_method_types' => [$stripePaymentMethod],
+        'line_items' => [
+            [
+                'price_data' => [
+                    'currency' => 'jpy',
+                    'product_data' => [
+                        'name' => $item->name,
                     ],
-                    'quantity' => 1,
+                    'unit_amount' => $item->price,
                 ],
+                'quantity' => 1,
             ],
-            'mode' => 'payment',
-            'success_url' => route('purchase.success', [
-                'item_id' => $item->id,
-                'payment_method' => $request->payment_method,
-            ], true),
-            'cancel_url' => route('purchase.cancel', [
-                'item_id' => $item->id,
-            ], true),
-        ]);
+        ],
+        'mode' => 'payment',
+        'success_url' => route('purchase.success', [
+            'item_id' => $item->id,
+            'payment_method' => $paymentMethod,
+        ], true),
+        'cancel_url' => route('purchase.cancel', [
+            'item_id' => $item->id,
+        ], true),
+    ]);
 
-        return redirect($checkoutSession->url);
+    if ($paymentMethod === 'コンビニ払い') {
+        $this->createPurchaseIfNotExists(
+            $item,
+            $user,
+            $paymentMethod
+        );
+    }
+
+    return redirect($checkoutSession->url);
     }
 
     public function editAddress($item_id)
@@ -136,32 +151,48 @@ class PurchaseController extends Controller
         $user = Auth::user();
 
         if ((int) $item->user_id === (int) Auth::id()) {
-            return redirect()->route('items.show', ['item_id' => $item_id]);
+        return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
-        if (!$request->filled('payment_method')) {
-            return redirect()->route('purchase.show', ['item_id' => $item_id])
-                ->with('message', '支払い方法を選択してください。');
+        $paymentMethod = $request->input('payment_method');
+
+        if (!$paymentMethod) {
+        return redirect()->route('purchase.show', ['item_id' => $item_id])
+            ->with('message', '支払い方法を選択してください。');
         }
 
-        $alreadyPurchased = DB::table('purchases')
-            ->where('item_id', $item_id)
-            ->exists();
-
-        if (!$alreadyPurchased) {
-            DB::table('purchases')->insert([
-                'user_id' => $user->id,
-                'item_id' => $item_id,
-                'payment_method' => $request->payment_method,
-                'postal_code' => $user->postal_code,
-                'address' => $user->address,
-                'building' => $user->building,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+        $this->createPurchaseIfNotExists(
+        $item,
+        $user,
+        $paymentMethod
+        );
 
         return redirect()->route('mypage.index', ['page' => 'buy']);
+    }
+
+    private function createPurchaseIfNotExists(
+        Item $item,
+        $user,
+        string $paymentMethod
+        ): void {
+        $alreadyPurchased = DB::table('purchases')
+        ->where('item_id', $item->id)
+        ->exists();
+
+        if ($alreadyPurchased) {
+        return;
+        }
+
+        DB::table('purchases')->insert([
+            'user_id' => $user->id,
+            'item_id' => $item->id,
+            'payment_method' => $paymentMethod,
+            'postal_code' => $user->postal_code,
+            'address' => $user->address,
+            'building' => $user->building,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     public function cancel($item_id)

@@ -20,11 +20,13 @@ class PurchaseRequest extends FormRequest
             'address' => $user ? $user->address : null,
         ]);
     }
-
     public function rules()
     {
         return [
-            'payment_method' => ['required'],
+            'payment_method' => [
+            'required',
+            'in:コンビニ払い,カード支払い',
+        ],
             'address' => ['required'],
         ];
     }
@@ -32,8 +34,12 @@ class PurchaseRequest extends FormRequest
     public function messages()
     {
         return [
-            'payment_method.required' => '支払い方法を選択してください。',
-            'address.required' => '配送先住所を登録してください。',
+            'payment_method.required'
+                => '支払い方法を選択してください。',
+            'payment_method.in'
+                => '支払い方法はコンビニ払いまたはカード支払いを選択してください。',
+            'address.required'
+                => '配送先住所を登録してください。',
         ];
     }
 }
