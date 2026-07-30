@@ -18,15 +18,7 @@ class PurchaseController extends Controller
     {
         $item = Item::findOrFail($item_id);
 
-        if ((int) $item->user_id === (int) Auth::id()) {
-            return redirect()->route('items.show', ['item_id' => $item_id]);
-        }
-
-        $alreadyPurchased = DB::table('purchases')
-            ->where('item_id', $item_id)
-            ->exists();
-
-        if ($alreadyPurchased) {
+        if ($this->isItemUnavailableForPurchase($item)) {
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
@@ -38,15 +30,7 @@ class PurchaseController extends Controller
     {
         $item = Item::findOrFail($item_id);
 
-        if ((int) $item->user_id === (int) Auth::id()) {
-            return redirect()->route('items.show', ['item_id' => $item_id]);
-        }
-
-        $alreadyPurchased = DB::table('purchases')
-            ->where('item_id', $item_id)
-            ->exists();
-
-        if ($alreadyPurchased) {
+        if ($this->isItemUnavailableForPurchase($item)) {
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
@@ -60,37 +44,37 @@ class PurchaseController extends Controller
 
     Stripe::setApiKey(config('services.stripe.secret'));
 
-    $checkoutSession = Session::create([
-        'payment_method_types' => [$stripePaymentMethod],
-        'line_items' => [
-            [
-                'price_data' => [
-                    'currency' => 'jpy',
-                    'product_data' => [
-                        'name' => $item->name,
+        $checkoutSession = Session::create([
+            'payment_method_types' => [$stripePaymentMethod],
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'jpy',
+                        'product_data' => [
+                            'name' => $item->name,
+                        ],
+                        'unit_amount' => $item->price,
                     ],
-                    'unit_amount' => $item->price,
+                    'quantity' => 1,
                 ],
-                'quantity' => 1,
             ],
-        ],
-        'mode' => 'payment',
-        'success_url' => route('purchase.success', [
-            'item_id' => $item->id,
-            'payment_method' => $paymentMethod,
-        ], true),
-        'cancel_url' => route('purchase.cancel', [
-            'item_id' => $item->id,
-        ], true),
-    ]);
+            'mode' => 'payment',
+            'success_url' => route('purchase.success', [
+                'item_id' => $item->id,
+                'payment_method' => $paymentMethod,
+            ], true),
+            'cancel_url' => route('purchase.cancel', [
+                'item_id' => $item->id,
+            ], true),
+        ]);
 
-    if ($paymentMethod === 'コンビニ払い') {
-        $this->createPurchaseIfNotExists(
-            $item,
-            $user,
-            $paymentMethod
-        );
-    }
+        if ($paymentMethod === 'コンビニ払い') {
+            $this->createPurchaseIfNotExists(
+                $item,
+                $user,
+                $paymentMethod
+            );
+        }
 
     return redirect($checkoutSession->url);
     }
@@ -99,15 +83,7 @@ class PurchaseController extends Controller
     {
         $item = Item::findOrFail($item_id);
 
-        if ((int) $item->user_id === (int) Auth::id()) {
-            return redirect()->route('items.show', ['item_id' => $item_id]);
-        }
-
-        $alreadyPurchased = DB::table('purchases')
-            ->where('item_id', $item_id)
-            ->exists();
-
-        if ($alreadyPurchased) {
+        if ($this->isItemUnavailableForPurchase($item)) {
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
@@ -120,16 +96,8 @@ class PurchaseController extends Controller
     {
         $item = Item::findOrFail($item_id);
 
-        if ((int) $item->user_id === (int) Auth::id()) {
-        return redirect()->route('items.show', ['item_id' => $item_id]);
-        }
-
-        $alreadyPurchased = DB::table('purchases')
-        ->where('item_id', $item_id)
-        ->exists();
-
-        if ($alreadyPurchased) {
-        return redirect()->route('items.show', ['item_id' => $item_id]);
+        if ($this->isItemUnavailableForPurchase($item)) {
+            return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
         $validated = $request->validated();
@@ -199,18 +167,21 @@ class PurchaseController extends Controller
     {
         $item = Item::findOrFail($item_id);
 
-        if ((int) $item->user_id === (int) Auth::id()) {
-            return redirect()->route('items.show', ['item_id' => $item_id]);
-        }
-
-        $alreadyPurchased = DB::table('purchases')
-            ->where('item_id', $item_id)
-            ->exists();
-
-        if ($alreadyPurchased) {
+        if ($this->isItemUnavailableForPurchase($item)) {
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
         return redirect()->route('purchase.show', ['item_id' => $item_id]);
+    }
+
+    private function isItemUnavailableForPurchase(Item $item): bool
+    {
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return true;
+        }
+
+        return DB::table('purchases')
+            ->where('item_id', $item->id)
+            ->exists();
     }
 }
