@@ -59,7 +59,10 @@
                 </a>
 
                 <a
-                    href="{{ route('items.index', ['tab' => 'mylist']) }}"
+                    href="{{ route('items.index', [
+                        'tab' => 'mylist',
+                        'keyword' => request('keyword'),
+                    ]) }}"
                     class="tab-links__item {{ request('tab') === 'mylist' ? 'is-active' : '' }}"
                 >
                     マイリスト
