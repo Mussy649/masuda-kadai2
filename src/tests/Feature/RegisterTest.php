@@ -91,7 +91,7 @@ class RegisterTest extends TestCase
 
         $response->assertRedirect('/register');
         $response->assertSessionHasErrors([
-            'password' => 'パスワードと確認用パスワードが一致しません。',
+            'password' => 'パスワードと一致しません。',
         ]);
 
         $this->assertDatabaseMissing('users', [
