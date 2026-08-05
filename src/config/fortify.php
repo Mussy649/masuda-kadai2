@@ -143,18 +143,11 @@ return [
     | these features or you can even remove all of these if you need to.
     |
     */
-
     'features' => [
         Features::registration(),
-        Features::resetPasswords(),
         Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
-        Features::twoFactorAuthentication([
-            'confirm' => true,
-            'confirmPassword' => true,
-
-        ]),
     ],
 
 ];
