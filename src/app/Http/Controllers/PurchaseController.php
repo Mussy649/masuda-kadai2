@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Requests\AddressRequest;
 use App\Http\Requests\PurchaseRequest;
 use App\Models\Item;
@@ -23,7 +22,6 @@ class PurchaseController extends Controller
         }
 
         $user = Auth::user();
-
             return view('purchases.show', compact('item', 'user'));
     }
     public function store(PurchaseRequest $request, $item_id)
@@ -40,9 +38,9 @@ class PurchaseController extends Controller
             ? 'konbini'
             : 'card';
 
-    $user = Auth::user();
+        $user = Auth::user();
 
-    Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         $checkoutSession = Session::create([
             'payment_method_types' => [$stripePaymentMethod],
@@ -119,20 +117,20 @@ class PurchaseController extends Controller
         $user = Auth::user();
 
         if ((int) $item->user_id === (int) Auth::id()) {
-        return redirect()->route('items.show', ['item_id' => $item_id]);
+            return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
         $paymentMethod = $request->input('payment_method');
 
         if (!$paymentMethod) {
-        return redirect()->route('purchase.show', ['item_id' => $item_id])
-            ->with('message', '支払い方法を選択してください。');
+            return redirect()->route('purchase.show', ['item_id' => $item_id])
+                ->with('message', '支払い方法を選択してください。');
         }
 
         $this->createPurchaseIfNotExists(
-        $item,
-        $user,
-        $paymentMethod
+            $item,
+            $user,
+            $paymentMethod
         );
 
         return redirect()->route('mypage.index', ['page' => 'buy']);
@@ -142,13 +140,13 @@ class PurchaseController extends Controller
         Item $item,
         $user,
         string $paymentMethod
-        ): void {
+    ): void {
         $alreadyPurchased = DB::table('purchases')
-        ->where('item_id', $item->id)
-        ->exists();
+            ->where('item_id', $item->id)
+            ->exists();
 
         if ($alreadyPurchased) {
-        return;
+            return;
         }
 
         DB::table('purchases')->insert([

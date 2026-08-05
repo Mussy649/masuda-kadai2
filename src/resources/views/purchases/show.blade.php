@@ -43,16 +43,9 @@
                     </button>
                 </form>
 
-                <a
-                    href="{{ route('mypage.index') }}"
-                    class="header-nav__link"
-                >
-                    マイページ
-                </a>
+                <a href="{{ route('mypage.index') }}" class="header-nav__link">マイページ</a>
 
-                <a href="/sell" class="header-nav__sell">
-                    出品
-                </a>
+                <a href="{{ route('items.create') }}" class="header-nav__sell">出品</a>
             </nav>
         </div>
     </header>

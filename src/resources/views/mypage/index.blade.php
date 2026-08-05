@@ -31,7 +31,7 @@
                 </form>
 
                 <a href="{{ route('mypage.index') }}" class="header-nav__link">マイページ</a>
-                <a href="/sell" class="header-nav__sell">出品</a>
+                <a href="{{ route('items.create') }}" class="header-nav__sell">出品</a>
             </nav>
         </div>
     </header>
@@ -57,33 +57,18 @@
                 <p class="profile__name">{{ $user->name }}</p>
             </div>
 
-            <a href="{{ route('mypage.profile.edit') }}" class="profile__edit-button">
-                プロフィールを編集
-            </a>
+            <a href="{{ route('mypage.profile.edit') }}" class="profile__edit-button">プロフィールを編集</a>
         </section>
 
         <nav class="mypage-tabs">
-            <a
-                href="{{ route('mypage.index', ['page' => 'sell']) }}"
-                class="mypage-tabs__item {{ $page !== 'buy' ? 'is-active' : '' }}"
-            >
-                出品した商品
-            </a>
+            <a href="{{ route('mypage.index', ['page' => 'sell']) }}" class="mypage-tabs__item {{ $page !== 'buy' ? 'is-active' : '' }}">出品した商品</a>
 
-            <a
-                href="{{ route('mypage.index', ['page' => 'buy']) }}"
-                class="mypage-tabs__item {{ $page === 'buy' ? 'is-active' : '' }}"
-            >
-                購入した商品
-            </a>
+            <a href="{{ route('mypage.index', ['page' => 'buy']) }}" class="mypage-tabs__item {{ $page === 'buy' ? 'is-active' : '' }}">購入した商品</a>
         </nav>
 
         <section class="item-list">
             @forelse ($items as $item)
-                <a
-                    href="{{ route('items.show', ['item_id' => $item->id]) }}"
-                    class="item-card"
-                >
+                <a href="{{ route('items.show', ['item_id' => $item->id]) }}" class="item-card">
                     <div class="item-card__image">
                         @if ($item->image_url)
                             <img

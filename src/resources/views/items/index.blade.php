@@ -31,12 +31,12 @@
                         <button type="submit" class="header-nav__button">ログアウト</button>
                     </form>
 
-                    <a href="/mypage" class="header-nav__link">マイページ</a>
-                    <a href="/sell" class="header-nav__sell">出品</a>
+                <a href="{{ route('mypage.index') }}" class="header-nav__link">マイページ</a>
+                <a href="{{ route('items.create') }}" class="header-nav__sell">出品</a>
                 @else
                     <a href="/login" class="header-nav__link">ログイン</a>
                     <a href="{{ route('login') }}" class="header-nav__link">マイページ</a>
-                    <a href="/sell" class="header-nav__sell">出品</a>
+                    <a href="{{ route('items.create') }}" class="header-nav__sell">出品</a>
                 @endauth
             </nav>
         </div>

@@ -95,7 +95,6 @@ class ItemController extends Controller
 
     public function store(ExhibitionRequest $request)
     {
-
         $imagePath = null;
 
         try {
