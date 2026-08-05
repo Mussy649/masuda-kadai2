@@ -8,8 +8,8 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Stripe\Stripe;
 
 class PurchaseController extends Controller
 {
@@ -21,9 +21,13 @@ class PurchaseController extends Controller
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
-        $user = Auth::user();
-            return view('purchases.show', compact('item', 'user'));
+        $profileUser = Auth::user();
+        $user = clone $profileUser;
+        $user->forceFill($this->getPurchaseAddress($item, $profileUser));
+
+        return view('purchases.show', compact('item', 'user'));
     }
+
     public function store(PurchaseRequest $request, $item_id)
     {
         $item = Item::findOrFail($item_id);
@@ -74,7 +78,7 @@ class PurchaseController extends Controller
             );
         }
 
-    return redirect($checkoutSession->url);
+        return redirect($checkoutSession->url);
     }
 
     public function editAddress($item_id)
@@ -85,7 +89,9 @@ class PurchaseController extends Controller
             return redirect()->route('items.show', ['item_id' => $item_id]);
         }
 
-        $user = Auth::user();
+        $profileUser = Auth::user();
+        $user = clone $profileUser;
+        $user->forceFill($this->getPurchaseAddress($item, $profileUser));
 
         return view('purchases.address', compact('item', 'user'));
     }
@@ -100,9 +106,7 @@ class PurchaseController extends Controller
 
         $validated = $request->validated();
 
-        $user = Auth::user();
-
-        $user->update([
+        session()->put("purchase_address.{$item->id}", [
             'postal_code' => $validated['postal_code'],
             'address' => $validated['address'],
             'building' => $validated['building'] ?? null,
@@ -149,16 +153,20 @@ class PurchaseController extends Controller
             return;
         }
 
+        $purchaseAddress = $this->getPurchaseAddress($item, $user);
+
         DB::table('purchases')->insert([
             'user_id' => $user->id,
             'item_id' => $item->id,
             'payment_method' => $paymentMethod,
-            'postal_code' => $user->postal_code,
-            'address' => $user->address,
-            'building' => $user->building,
+            'postal_code' => $purchaseAddress['postal_code'],
+            'address' => $purchaseAddress['address'],
+            'building' => $purchaseAddress['building'],
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        session()->forget("purchase_address.{$item->id}");
     }
 
     public function cancel($item_id)
@@ -181,5 +189,14 @@ class PurchaseController extends Controller
         return DB::table('purchases')
             ->where('item_id', $item->id)
             ->exists();
+    }
+
+    private function getPurchaseAddress(Item $item, $user): array
+    {
+        return session()->get("purchase_address.{$item->id}", [
+            'postal_code' => $user->postal_code,
+            'address' => $user->address,
+            'building' => $user->building,
+        ]);
     }
 }

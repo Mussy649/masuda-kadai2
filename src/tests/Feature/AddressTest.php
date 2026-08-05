@@ -39,7 +39,23 @@ class AddressTest extends TestCase
             ])
         );
 
+        $response->assertSessionHas(
+            "purchase_address.{$item->id}",
+            [
+                'postal_code' => '987-6543',
+                'address' => '大阪府テスト市2-2-2',
+                'building' => '変更後マンション202',
+            ]
+        );
+
         $this->assertDatabaseHas('users', [
+            'id' => $buyer->id,
+            'postal_code' => '123-4567',
+            'address' => '東京都テスト区1-1-1',
+            'building' => '変更前ビル101',
+        ]);
+
+        $this->assertDatabaseMissing('users', [
             'id' => $buyer->id,
             'postal_code' => '987-6543',
             'address' => '大阪府テスト市2-2-2',
@@ -104,6 +120,20 @@ class AddressTest extends TestCase
             'user_id' => $buyer->id,
             'item_id' => $item->id,
             'payment_method' => 'カード支払い',
+            'postal_code' => '987-6543',
+            'address' => '大阪府テスト市2-2-2',
+            'building' => '変更後マンション202',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'id' => $buyer->id,
+            'postal_code' => '123-4567',
+            'address' => '東京都テスト区1-1-1',
+            'building' => '変更前ビル101',
+        ]);
+
+        $this->assertDatabaseMissing('users', [
+            'id' => $buyer->id,
             'postal_code' => '987-6543',
             'address' => '大阪府テスト市2-2-2',
             'building' => '変更後マンション202',
