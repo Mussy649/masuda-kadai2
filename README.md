@@ -100,6 +100,13 @@ MAIL_PASSWORD=null
 MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS=noreply@coachtech.local
 MAIL_FROM_NAME="${APP_NAME}"
+
+STRIPE_KEY=pk_test_xxxxxxxxxxxxxxxxx
+STRIPE_SECRET=sk_test_xxxxxxxxxxxxxxxxx
+
+`STRIPE_KEY`および`STRIPE_SECRET`には、Stripeダッシュボードで取得したテスト環境用のAPIキーを設定してください。
+
+実際のAPIキーはREADMEやGitHubへ記載・公開しないでください。
 ```
 
 ### 7. アプリケーションキーを作成
@@ -154,6 +161,20 @@ http://localhost:8025
 
 未認証のまま再度ログインした場合は、通常画面へは進まず、メール認証誘導画面へ遷移します。
 
+### 13. テストを実行
+
+PHPUnitのテストは、SQLiteのインメモリデータベースを使用して実行されます。
+
+```bash
+php artisan test
+```
+
+すべて正常な場合、以下の結果が表示されます。
+
+```text
+Tests: 43 passed
+```
+
 ## 使用技術
 
 - PHP 8.1
@@ -164,6 +185,9 @@ http://localhost:8025
 - Docker / Docker Compose
 - phpMyAdmin
 - MailHog
+- Stripe Checkout
+- PHPUnit
+- SQLite（PHPUnitテスト用インメモリデータベース）
 
 ## URL
 
@@ -175,6 +199,23 @@ http://localhost:8025
 - メール認証誘導画面：http://localhost/email/verify
 - MailHog：http://localhost:8025
 - phpMyAdmin：http://localhost:8080
+
+## ログイン情報
+
+### 一般ユーザー
+
+初期データとして、以下の認証済みユーザーを登録しています。
+
+| ユーザー名 | メールアドレス | パスワード |
+|---|---|---|
+| Taro | taro@example.com | password |
+| Hanako | hanako@example.com | password |
+
+いずれのユーザーもメール認証済みのため、ログイン後すぐに各機能を利用できます。
+
+### 管理者ユーザー
+
+本アプリには管理者専用機能がないため、管理者ユーザーは用意していません。
 
 ## ER図
 
